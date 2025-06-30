@@ -5,6 +5,7 @@ go 1.24.2
 require github.com/cloudwego/hertz v0.10.0
 
 require (
+	github.com/apache/thrift v0.13.0 // indirect
 	github.com/bytedance/gopkg v0.1.1 // indirect
 	github.com/bytedance/sonic v1.13.2 // indirect
 	github.com/bytedance/sonic/loader v0.2.4 // indirect
