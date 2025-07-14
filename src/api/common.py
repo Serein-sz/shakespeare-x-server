@@ -3,12 +3,13 @@ from pydantic import BaseModel
 
 T = TypeVar("T")
 
+
 class ApiResponse(BaseModel, Generic[T]):
     code: int
     message: str
     data: Optional[T] = None
     errors: Optional[List[str]] = None
-    
+
     @classmethod
     def success(cls, message: str, data: Optional[T] = None):
         return cls(code=200, message=message, data=data)

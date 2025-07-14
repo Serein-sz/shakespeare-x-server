@@ -1,3 +1,15 @@
+from fastapi.applications import FastAPI
+
+
+from langchain_ollama.chat_models import ChatOllama
+
+
+from langgraph.graph.state import CompiledStateGraph
+
+
+from typing import Any, Generator
+
+
 import asyncio
 from contextlib import asynccontextmanager
 
@@ -11,28 +23,28 @@ from src.database import init_db
 from src.api import register_route
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> Generator[None, Any, None]:
     init_db()
     register_route(app)
-    print("====== applicaiton start ======")
+    print("====== application start ======")
     yield
-    print("====== applicaiton shutdown ======")
+    print("====== application shutdown ======")
 
 
-app = FastAPI(lifespan=lifespan)
+app: FastAPI = FastAPI(lifespan=lifespan)
 
 
-model = ChatOllama(
+model: ChatOllama = ChatOllama(
     model="deepseek-r1:1.5b",
     base_url="http://112.125.89.224:11434",
 )
 
-agent = create_react_agent(model=model, tools=[], prompt="You are a helpful assistant")
+agent: CompiledStateGraph = create_react_agent(model=model, tools=[], prompt="You are a helpful assistant")
 
 
 @app.post("/stream")
-async def stream_endpoint(request: Request):
-    async def event_generator():
+async def stream_endpoint(request: Request) -> EventSourceResponse:
+    async def event_generator() -> Generator[dict[str, Any], Any, None]:
         # 使用正确的流式调用
         async for chunk in agent.astream(
             input={"messages": [{"role": "user", "content": "Who are you?"}]},
