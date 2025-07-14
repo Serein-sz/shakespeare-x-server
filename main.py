@@ -1,16 +1,6 @@
-from fastapi.applications import FastAPI
-
-
-from langchain_ollama.chat_models import ChatOllama
-
-
-from langgraph.graph.state import CompiledStateGraph
-
-
+import asyncio
 from typing import Any, Generator
 
-
-import asyncio
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -18,9 +8,11 @@ from sse_starlette import EventSourceResponse
 
 from langchain_ollama import ChatOllama
 from langgraph.prebuilt import create_react_agent
+from langgraph.graph.state import CompiledStateGraph
 
 from src.database import init_db
 from src.api import register_route
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> Generator[None, Any, None]:
@@ -39,7 +31,9 @@ model: ChatOllama = ChatOllama(
     base_url="http://112.125.89.224:11434",
 )
 
-agent: CompiledStateGraph = create_react_agent(model=model, tools=[], prompt="You are a helpful assistant")
+agent: CompiledStateGraph = create_react_agent(
+    model=model, tools=[], prompt="You are a helpful assistant"
+)
 
 
 @app.post("/stream")
@@ -61,5 +55,3 @@ async def stream_endpoint(request: Request) -> EventSourceResponse:
             await asyncio.sleep(0.05)
 
     return EventSourceResponse(event_generator())
-
-
