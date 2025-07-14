@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import Engine, create_engine, Column, DateTime
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy.orm import Mapped, declarative_base, sessionmaker, Session
 from snowflake import SnowflakeGenerator
 
 Base = declarative_base()
@@ -25,10 +25,10 @@ generator: SnowflakeGenerator = SnowflakeGenerator(0)
 class TimestampMixin:
     """时间戳混合类"""
 
-    created_at: Column[datetime] = Column[datetime](
+    created_at: Mapped[datetime] = Column(
         DateTime, default=datetime.now, nullable=False
     )
-    updated_at: Column[datetime] = Column[datetime](
+    updated_at: Mapped[datetime] = Column[datetime](
         DateTime, default=datetime.now, onupdate=datetime.now, nullable=False
     )
 
