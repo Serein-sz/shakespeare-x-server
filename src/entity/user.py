@@ -21,7 +21,9 @@ class UserUpdate(UserDto):
     email: EmailStr | None = None
     password: str | None = None
 
-
+class UserVo(UserDto):
+    ...
+    
 class User(Model):
     __tablename__: str = "users"
     __table_args__: dict[str, bool] = {"extend_existing": True}
@@ -52,3 +54,6 @@ class User(Model):
             elif hasattr(self, field):
                 setattr(self, field, value)
         return self
+
+    def to_user_vo(self) -> UserVo:
+        return UserVo(id=self.id, name=self.name, email=self.email)

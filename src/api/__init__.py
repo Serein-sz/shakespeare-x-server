@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends
 
-from src.utils import get_current_user
+from src.dependencies import get_current_user
 from .auth_api import auth_route
 from .user_api import user_route
 
