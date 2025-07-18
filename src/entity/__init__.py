@@ -1,5 +1,5 @@
-from .user import User, UserDto, UserCreate, UserUpdate, verify_password
-from .auth import UserLoginRequest
+from .user import User, UserDto, UserCreate, UserUpdate
+from .auth import Token
 
 __all__ = (
     # user
@@ -7,7 +7,6 @@ __all__ = (
     "UserDto",
     "UserCreate",
     "UserUpdate",
-    "verify_password",
     # auth
-    "UserLoginRequest",
+    "Token",
 )

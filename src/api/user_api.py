@@ -1,15 +1,9 @@
 from fastapi import APIRouter
 from src.repository import user as user_repository
-from src.entity import UserCreate, UserUpdate
+from src.entity import UserUpdate
 from .common import ApiResponse
 
-user_route: APIRouter = APIRouter(prefix="/user", tags=["用户"])
-
-
-@user_route.post("/")
-async def create_user(user: UserCreate) -> ApiResponse:
-    user_repository.create_user(user)
-    return ApiResponse.success("user create success")
+user_route: APIRouter = APIRouter(prefix="/user", tags=["user"])
 
 
 @user_route.put("/")

@@ -1,24 +1,8 @@
-import bcrypt
 from sqlalchemy import Column, String
 from pydantic import BaseModel, EmailStr
 
 from src.database import Model, generator
-
-
-def hash_password(password: str) -> str:
-    """将明文密码转换为 bcrypt 哈希"""
-    # 生成盐值并哈希密码
-    salt = bcrypt.gensalt()
-    hashed_bytes = bcrypt.hashpw(password.encode("utf-8"), salt)
-    return hashed_bytes.decode("utf-8")  # 转换为字符串存储
-
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """验证密码是否匹配哈希值"""
-    print(plain_password, hashed_password)
-    return bcrypt.checkpw(
-        plain_password.encode("utf-8"), hashed_password.encode("utf-8")
-    )
+from src.utils import get_password_hash
 
 
 class UserDto(BaseModel):
@@ -51,7 +35,7 @@ class User(Model):
         return f"<User(id={self.id}, name='{self.name}', email='{self.email}')>"
 
     def set_password(self, password: str) -> None:
-        self.password = hash_password(password)
+        self.password = get_password_hash(password)
 
     @classmethod
     def from_create(cls, user_create: UserCreate) -> "User":
@@ -68,8 +52,3 @@ class User(Model):
             elif hasattr(self, field):
                 setattr(self, field, value)
         return self
-
-
-if __name__ == "__main__":
-    hashed_password: str = hash_password("123456")
-    print(verify_password("123456", hashed_password))

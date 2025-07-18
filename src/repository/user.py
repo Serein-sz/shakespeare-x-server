@@ -1,5 +1,6 @@
 from src.database import Session
-from src.entity import User, UserCreate, UserUpdate, verify_password
+from src.entity import User, UserCreate, UserUpdate
+from src.utils import verify_password
 
 
 def create_user(user: UserCreate) -> None:
