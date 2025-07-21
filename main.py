@@ -11,7 +11,7 @@ from src.database import init_db
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> Generator[None, Any, None]:
-    init_db()
+    await init_db()
     register_route(app)
     print("====== application start ======")
     yield
