@@ -42,9 +42,10 @@ def load_models() -> None:
 
 
 # 在初始化数据库时调用
-def init_db() -> None:
+async def init_db() -> None:
     load_models()
-    Model.metadata.create_all(bind=engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
 
 __all__ = ["init_db", "Base", "Session", "generator", "Model"]

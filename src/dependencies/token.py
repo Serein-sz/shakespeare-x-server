@@ -36,6 +36,7 @@ async def validate_token(token: Annotated[str, Depends(oauth2_scheme)]):
     except InvalidTokenError:
         raise credentials_exception
 
+
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -46,7 +47,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     username = payload.get("sub")
     if username is None:
         raise credentials_exception
-    user = user_repository.get_user_by_email(username)
+    user = await user_repository.get_user_by_email(username)
     if user is None:
         raise credentials_exception
     return user

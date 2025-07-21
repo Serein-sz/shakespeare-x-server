@@ -1,14 +1,17 @@
 from datetime import datetime
 
-from sqlalchemy import Engine, create_engine, Column, DateTime
-from sqlalchemy.orm import Mapped, declarative_base, sessionmaker, Session
+from sqlalchemy import Column, DateTime
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+
+
+from sqlalchemy.orm import Mapped, declarative_base, sessionmaker
 from snowflake import SnowflakeGenerator
 
 Base = declarative_base()
 
 # 创建引擎
-engine: Engine = create_engine(
-    "mysql+pymysql://root:Caonima3344@112.125.89.224:3308/shakespeare-x",
+engine: AsyncEngine = create_async_engine(
+    "mysql+aiomysql://root:Caonima3344@112.125.89.224:3308/shakespeare-x",
     echo=True,  # 输出SQL日志
     future=True,  # 使用2.0风格API
     pool_size=5,  # 连接池大小
@@ -17,7 +20,9 @@ engine: Engine = create_engine(
 )
 
 
-Session: sessionmaker[Session] = sessionmaker[Session](bind=engine, future=True)
+Session: sessionmaker[AsyncSession] = sessionmaker[AsyncSession](
+    bind=engine, class_=AsyncSession, future=True
+)
 
 generator: SnowflakeGenerator = SnowflakeGenerator(0)
 
