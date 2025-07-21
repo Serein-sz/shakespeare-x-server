@@ -22,7 +22,7 @@ async def delete_user(id: str) -> None:
     async with Session() as session:
         user = await session.get(User, id)
         if user:
-            session.delete(user)
+            await session.delete(user)
             await session.commit()
 
 

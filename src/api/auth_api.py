@@ -16,7 +16,7 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()) -> ApiResponse
     if await user_repository.verify_user_password(
         email=form_data.username, password=form_data.password
     ):
-        access_token_expires = timedelta(minutes=30)
+        access_token_expires = timedelta(minutes=60 * 24 * 30)
         access_token = create_access_token(
             data={"sub": form_data.username}, expires_delta=access_token_expires
         )
