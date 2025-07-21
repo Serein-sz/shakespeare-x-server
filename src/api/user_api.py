@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 
 from src.dependencies import get_current_user
 from src.entity import User, UserUpdate
+from src.entity.user import UserVo
 from src.repository import user as user_repository
 
 from .common import ApiResponse
@@ -24,6 +25,6 @@ async def delete_user(id: str) -> ApiResponse:
 
 
 @user_route.get("/")
-async def get_user(user: Annotated[User, Depends(get_current_user)]) -> ApiResponse:
+async def get_user(user: Annotated[User, Depends(get_current_user)]) -> ApiResponse[UserVo]:
     # user = user_repository.get_user_by_email(email)
     return ApiResponse.success("user get success", data=user.to_user_vo())

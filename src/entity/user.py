@@ -8,6 +8,7 @@ from src.utils import get_password_hash
 class UserDto(BaseModel):
     id: str | None = None
     name: str | None = None
+    avatar: str | None = None
     email: EmailStr
 
 
@@ -17,13 +18,12 @@ class UserCreate(UserDto):
 
 class UserUpdate(UserDto):
     id: str
-    name: str | None = None
-    email: EmailStr | None = None
     password: str | None = None
 
-class UserVo(UserDto):
-    ...
-    
+
+class UserVo(UserDto): ...
+
+
 class User(Model):
     __tablename__: str = "users"
     __table_args__: dict[str, bool] = {"extend_existing": True}
@@ -32,6 +32,7 @@ class User(Model):
     name: Column[str] = Column[str](String(50), nullable=False)
     password: Column[str] = Column[str](String(100), nullable=False)
     email: Column[str] = Column[str](String(100), unique=True)
+    avatar: Column[str] = Column[str](String(100), nullable=True)
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, name='{self.name}', email='{self.email}')>"
@@ -56,4 +57,4 @@ class User(Model):
         return self
 
     def to_user_vo(self) -> UserVo:
-        return UserVo(id=self.id, name=self.name, email=self.email)
+        return UserVo(id=self.id, name=self.name, email=self.email, avatar=self.avatar)

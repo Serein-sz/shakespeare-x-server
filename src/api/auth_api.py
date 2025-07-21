@@ -3,17 +3,16 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
+from src.api.common import ApiResponse
 from src.entity import Token, UserCreate
 from src.repository import user as user_repository
 from src.utils import create_access_token
-
-from .common import ApiResponse
 
 auth_route: APIRouter = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @auth_route.post("/token")
-async def token(form_data: OAuth2PasswordRequestForm = Depends()):
+async def token(form_data: OAuth2PasswordRequestForm = Depends()) -> ApiResponse[Token]:
     if user_repository.verify_user_password(
         email=form_data.username, password=form_data.password
     ):
