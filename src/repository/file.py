@@ -38,10 +38,9 @@ async def get_files_vo(user_id: str) -> list[FileTreeVo]:
             select(FileTreeDb).where(FileTreeDb.user_id == user_id)
         )
         files = result.scalars().all()
-        files = map(FileTreeDb.to_tree_node_vo, files)
         children_dict: dict[str, list[FileTreeVo]] = {}
         roots: list[FileTreeVo] = []
-        for file in files:
+        for file in map(FileTreeDb.to_tree_node_vo, files):
             if file.parent_id is None or file.parent_id == "":
                 roots.append(file)
             elif children_dict.get(file.parent_id):
@@ -55,4 +54,19 @@ async def get_files_vo(user_id: str) -> list[FileTreeVo]:
                 build_tree(node.children)
 
         build_tree(roots)
+
         return roots
+
+
+async def move_file(id: str, target_id: str | None) -> bool:
+    async with Session() as session:
+        if target_id is None:
+            target_id = ""
+        else:
+            target_file = await session.get(FileTreeDb, target_id)
+            if target_file.type == "file":
+                target_id = target_file.parent_id
+        file = await session.get(FileTreeDb, id)
+        if file:
+            file.parent_id = target_id
+            await session.commit()

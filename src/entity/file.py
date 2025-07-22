@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Text, ForeignKey
+from sqlalchemy import Column, String, Text
 from pydantic import BaseModel
 from typing import Optional, List, Literal
 
@@ -44,7 +44,10 @@ class FileTreeUpdateContent(BaseModel):
 class FileTreeVo(FileTree):
     """视图模型"""
 
-    children: Optional[List["FileTree"]] = None
+    children: Optional[List["FileTreeVo"]] = None
+
+    def __repr__(self) -> str:
+        return f"<FileTreeVo(id={self.id}, parent_id={self.parent_id}, name={self.name}, type={self.type})>"
 
 
 class FileTreeDb(Model):

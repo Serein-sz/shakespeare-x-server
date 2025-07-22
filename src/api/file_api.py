@@ -49,3 +49,11 @@ async def delete_file(id: str) -> ApiResponse:
 async def update_file(file: FileTreeUpdateContent) -> ApiResponse:
     await file_repository.update_content(file.id, file.content)
     return ApiResponse.success("file update success")
+
+
+@file_route.put("/move-to")
+async def move_file(id: str, target_id: str | None = None) -> ApiResponse[bool]:
+    if id == target_id:
+        return ApiResponse.errors("move file error: file parent not itself.")
+    result = await file_repository.move_file(id, target_id)
+    return ApiResponse.success("move file success.", result)
